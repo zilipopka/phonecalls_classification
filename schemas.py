@@ -15,3 +15,13 @@ class ManagerPerformance(BaseModel):
 class DialogueAnalysis(BaseModel):
     client_emotion: EmotionAnalysis
     manager_performance: ManagerPerformance
+
+
+class Replic(BaseModel):
+    timestamp: str
+    role: str
+    text: str
+
+
+class Responce(BaseModel):
+    speakers: list[Replic]

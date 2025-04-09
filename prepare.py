@@ -1,5 +1,6 @@
 from openai import OpenAI
 from dotenv import load_dotenv
+from schemas import Responce
 import os
 
 load_dotenv()
@@ -8,34 +9,24 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
 # Транскрибация
-def transcribe(filename):
-  audio_file = open(filename, "rb")
+def transcribe(audio_bytes):
+    # audio_file = open(filename, "rb")
 
-  transcript = client.audio.transcriptions.create(
-    model="whisper-1",
-    file=audio_file,
-    language="ru",
-    prompt="Следующий аудиофайл содержит диалог между клиентом банка и его менеджером.",
-    response_format="verbose_json",
-    timestamp_granularities=["segment"],
-  )
+    transcript = client.audio.transcriptions.create(
+        model="whisper-1",
+        file=audio_bytes,
+        language="ru",
+        prompt="Следующий аудиофайл содержит диалог между клиентом банка и его менеджером.",
+        response_format="verbose_json",
+        timestamp_granularities=["segment"],
+    )
 
-  text = str(list(map(lambda x: tuple(x), dict(transcript)["segments"])))
+    text = str(list(map(tuple, dict(transcript)["segments"])))
 
-  return text
+    return text
 
 
 # Обработка транскрибации, разделение на спикеров
-from pydantic import BaseModel, Field
-
-class Replic(BaseModel):
-    timestamp: str
-    role: str
-    text: str
-
-class Responce(BaseModel):
-    speakers: list[Replic]
-
 def preprocessing(text):
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
@@ -55,6 +46,7 @@ def preprocessing(text):
     response = completion.choices[0].message.parsed
 
     answer = []
+
     for i in response.speakers:
         element = {
             'role': i.role,

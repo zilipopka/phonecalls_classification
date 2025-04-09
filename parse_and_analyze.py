@@ -1,14 +1,15 @@
+import os
 from os.path import isfile
 import json
 from pathlib import Path
 from analyze_dialogue import analyze_dialogue
 import pandas as pd
-import os
 
 try:
-  df = pd.read_excel('data.xlsx')
+    df = pd.read_excel('data.xlsx')
 except:
-  df = pd.DataFrame(columns=['date', 'manager_id', 'manager_score', 'manager_explanation', 'client_emotion', 'client_explanation'])
+    df = pd.DataFrame(columns=['date', 'manager_id', 'manager_score', 'manager_explanation', 'client_emotion', 'client_explanation'])
+
 def parse_dialogue_and_analyze(json_string):
     # Загрузка данных
     data = json.loads(json_string)
@@ -42,5 +43,6 @@ def parse_dialogue_and_analyze(json_string):
 
 
 # Пример вызова
-response = analyze_dialogue('dialog.json')
-print(response)
+if __name__ == "__main__":
+    response = analyze_dialogue('dialog.json')
+    print(response)
