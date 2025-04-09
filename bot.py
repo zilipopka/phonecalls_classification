@@ -28,24 +28,39 @@ def getfile(message):
         return
 
     byte_stream = bot.download_file(file.file_path)
+    file_name = str(uuid.uuid4()) + ".wav"
 
-    res = transcribe(byte_stream)
-    print("transcribe", "/n", res)
+    with open(f"storage/{file_name}", "wb") as new_file:
+        new_file.write(byte_stream)
+
+    bot.reply_to(message, "Файл скачан")
+
+    result = processfile(f"storage/{file_name}")
+
+    bot.reply_to(message, "Обработка завершена")
+    bot.reply_to(message, result)
+
+    os.remove(f"storage/{file_name}")
+
+
+def processfile(file_name):
+    res = transcribe(file_name)
+    print("transcribe", "\n", res)
     print()
 
     res = preprocessing(res)
-    print("preprocessing", "/n", res)
+    print("preprocessing", "\n", res)
     print()
 
     res = json.dumps(res, ensure_ascii=False, indent=4)
-    print("json", "/n", res)
+    print("json", "\n", res)
     print()
 
     res = parse_dialogue_and_analyze(res)
-    print("last", "/n", res)
+    print("last", "\n", res)
     print()
 
-
+    return res
 
 
 if __name__ == "__main__":
