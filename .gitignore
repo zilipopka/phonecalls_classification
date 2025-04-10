@@ -3,3 +3,5 @@ venv
 ml_attempts
 .idea/
    __pycache__/
+storage
+data.xlsx
