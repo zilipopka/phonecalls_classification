@@ -5,3 +5,4 @@ ml_attempts
    __pycache__/
 storage
 data.xlsx
+__pycache__
