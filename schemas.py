@@ -23,5 +23,5 @@ class Replic(BaseModel):
     text: str
 
 
-class Responce(BaseModel):
+class Response(BaseModel):
     speakers: list[Replic]

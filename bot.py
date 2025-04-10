@@ -33,12 +33,19 @@ def getfile(message):
     with open(f"storage/{file_name}", "wb") as new_file:
         new_file.write(byte_stream)
 
-    bot.reply_to(message, "Файл скачан")
+    bot.reply_to(message, "Обработка...")
 
     result = processfile(f"storage/{file_name}")
+    client_res = result.client_emotion.explanation
+    manager_res = result.manager_performance.explanation
 
     bot.reply_to(message, "Обработка завершена")
-    bot.reply_to(message, result)
+
+    chat_id = message.chat.id
+    with open("data.xlsx", 'rb') as file:
+        bot.send_document(chat_id=chat_id, document=file)
+
+    bot.reply_to(message, f"{client_res}\n\n{manager_res}")
 
     os.remove(f"storage/{file_name}")
 
