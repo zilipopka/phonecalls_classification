@@ -1,6 +1,6 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-from schemas import Responce
+from schemas import Response
 import os
 
 load_dotenv()
@@ -40,7 +40,7 @@ def preprocessing(text):
                 "content": [{"type": "text", "text": text}]
             }
         ],
-        response_format=Responce
+        response_format=Response
     )
 
     response = completion.choices[0].message.parsed
