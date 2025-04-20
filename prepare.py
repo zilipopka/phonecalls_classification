@@ -9,12 +9,12 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
 # Транскрибация
-def transcribe(audio_bytes):
-    # audio_file = open(filename, "rb")
+def transcribe(filename: str):
+    audio_file = open(filename, "rb")
 
     transcript = client.audio.transcriptions.create(
         model="whisper-1",
-        file=audio_bytes,
+        file=audio_file,
         language="ru",
         prompt="Следующий аудиофайл содержит диалог между клиентом банка и его менеджером.",
         response_format="verbose_json",
@@ -27,7 +27,7 @@ def transcribe(audio_bytes):
 
 
 # Обработка транскрибации, разделение на спикеров
-def preprocessing(text):
+def preprocessing(text) -> list:
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
         messages=[
